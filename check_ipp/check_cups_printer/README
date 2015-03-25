@@ -1,0 +1,14 @@
+Although there are a few scripts that will give an overall view of the CUPS system and queue lengths I needed to specifically target high priority printers to ensure they were always up and accepting jobs.
+
+This simple script will take CUPS server hostname and CUPS printer as arguments and display it's current status.  It will determine if the CUPS printer is in one of the following states: idle, printing, rejecting, disabled, or unable to connect.
+
+This script will either return an OK for idle and printing or a CRITICAL for anything else.
+
+Syntax is as follows:
+
+./check_cups_printer.sh -h <CUPS SERVER> -p <PRINTER QUEUE NAME>
+
+Requirements: lpstat, bash
+
+Copyright (c) 2009, Mark Shirley
+All rights reserved.
