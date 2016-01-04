@@ -1,0 +1,3 @@
+[submodule "check_domain"]
+	path = check_domain
+	url = https://github.com/glensc/nagios-plugin-check_domain
