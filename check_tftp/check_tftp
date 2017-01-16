@@ -1,0 +1,108 @@
+#!/usr/local/bin/perl
+
+##
+# check_tftp - (c) 2005 O'Shaughnessy Evans
+# 
+# Check connections to a TFTP server.
+# 
+# $Id: check_tftp,v 1.2 2005/02/13 02:06:35 root Exp $
+# 
+# Requires a tftp binary that accepts commands on standard input.
+##
+
+require 5.004;
+use strict;
+use POSIX;
+use Getopt::Long qw(:config no_ignore_case);
+
+use lib '/usr/local/libexec/nagios'; 
+use utils qw($TIMEOUT %ERRORS &print_revision &support);
+
+use vars qw($ME $VERSION %Flags $Help $Usage $Verbose $Host $Port $Tftp_Cmd);
+
+BEGIN {
+  $VERSION = '0.'. (split(' ', '$Id: check_tftp,v 1.2 2005/02/13 02:06:35 root Exp $'))[2];
+  $ME = 'check_tftp';
+
+  # tftp command to get connection state
+  $Tftp_Cmd = 'echo status | /usr/bin/tftp %s %s';
+
+  $Usage = "$ME: -H host [-p port] [-v]";
+  $Help = <<EOhelp;
+$ME:  Nagios plugin to check a tftp server
+
+Usage:
+  $ME [<flags>] -H host [-p port] [-v]
+  $ME --help
+  $ME --man
+  $ME --version
+
+Options:
+  --hostname    The name of the host running the tftp server.
+  --port        The port on which the tftp service should be running.
+  --verbose|-v  Show details of progress (give more than once for more info).
+  --help        Show this usage text.
+  --man         Show the comprehensive documentation.
+  --version     Show the version ($VERSION).
+
+EOhelp
+}
+
+# handle the command-line
+$Verbose = 0;
+GetOptions('verbose|v+'   => \$Verbose,
+           'version|V'    => \$Flags{version},
+           'help|h'       => \$Flags{help},
+           'man|m'        => \$Flags{man},
+       'hostname|H=s' => \$Host,
+       'port|p=s'     => \$Port,
+          )
+ or die($Usage);
+if ($Flags{version}) {
+    print_revision($ME, $VERSION);
+    exit 0;
+}
+elsif ($Flags{help}) {
+    print $Help;
+    exit 0;
+}
+elsif ($Flags{man}) {
+    use Pod::Usage;
+    pod2usage(-verbose => 2, -exitval => 0);
+}
+
+if (!$Host) {
+    print "ERROR:  Sorry, but a hostname must be given.\n\n".
+          $Usage;
+    exit $ERRORS{UNKNOWN};
+}
+elsif (! utils::is_hostname($Host)) {
+    print "ERROR:  Sorry, but \"$Host\" doesn't look like a host name.\n";
+    exit $ERRORS{UNKNOWN};
+}
+
+my $cmd = sprintf $Tftp_Cmd, $Host, $Port;
+print "opening $cmd\n" if $Verbose;
+my @out = `$cmd`;
+print "output is:\n\n@out\n" if $Verbose;
+my $status = $out[0];
+
+my ($state, $answer);
+if ($status =~ /^Connected to/) {
+    $state = $ERRORS{OK};
+    $answer = $status;
+    chomp $answer;
+}
+else {
+    $state = $ERRORS{CRITICAL};
+    $answer = $status;
+    chomp $answer;
+}
+
+foreach my $errname (keys %ERRORS) {
+    if ($state == $ERRORS{$errname}) {
+        print "TFTP $errname: $answer\n";
+        last;
+    }
+}
+exit $state;
