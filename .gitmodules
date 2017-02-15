@@ -1,6 +1,6 @@
-[submodule "check_domain"]
-	path = check_domain
-	url = https://github.com/glensc/nagios-plugin-check_domain
 [submodule "check_smart"]
 	path = check_smart
 	url = git@github.com:Napsty/check_smart.git
+[submodule "check_domain"]
+	path = check_domain
+	url = git@github.com:glensc/monitoring-plugin-check_domain.git
