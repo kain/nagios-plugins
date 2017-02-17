@@ -1,0 +1,53 @@
+NAGIOS
+
+
+Add right nagios.cfg file
+Add submit_check_result_via_nsca to /etc/nagios3
+Install lmsensors
+
+Restart services
+
+
+SNMP monitoring
+SERVER side
+apt-get isntall libsnmp-base snmp-mibs-downloader nagios-snmp-plugins adaptec-universal-storage-mib
+in config /etc/snmp/snmp.conf comment out  "#mibs :"
+
+CLIENT side
+ts.pt7.ru
+  - install SNMP server
+  - enable firewall rules
+  - allow SNMP traffic to/from kasatkin.org
+  - configure nagios to monitor cpu load, memory, free hdd space, RAID controllers, etc
+  /usr/lib/nagios/plugins/check_snmp_storage.pl -H ts.lan -C public -2 -m "C:" -w 90 -c 95
+  /usr/lib/nagios/plugins/check_snmp_storage.pl -H ts.lan -C public -2 -m "D:" -w 90 -c 95
+  /usr/lib/nagios/plugins/check_snmp_load.pl -H ts -C public -2 -w 80 -c 90 -T stand
+  /usr/lib/nagios/plugins/check_snmp_process.pl -H ts.lan -C public -2 -n "notepad.exe" -r
+  /usr/lib/nagios/plugins/check_snmp_time -H ts.lan -C public -2 -w 60 -c 600
+
+aqua-nova.ru
+  - same as above but via passive checks on gw nagios
+
+lzto.ru
+  - same as above but for all win servers
+
+littoral.ru
+  /usr/lib/nagios/plugins/check_snmp -H ts.lan -C public -P 2c -o ausMibStatusOverall.0
+  ausControllerZMMStatus.1
+  ausControllerStatus.1
+  ausControllerOverallStatus.1
+  ausControllerTemperature.1
+  ausDeviceStatus.1
+  ausDeviceStatus.2
+  ...
+  ausStorageDeviceSmartStatus.1
+  ausStorageDeviceSmartStatus.2
+  ...
+  ausArrayStatus.1
+  ausArrayStatus.2
+  ...
+  - on server and on skud + security
+
+ifmo.ru
+  - owl use SNMP too
+
