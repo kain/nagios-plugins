@@ -3,4 +3,4 @@
 	url = git@github.com:Napsty/check_smart.git
 [submodule "check_domain"]
 	path = check_domain
-	url = git@github.com:glensc/monitoring-plugin-check_domain.git
+	url = git@github.com:kain/monitoring-plugin-check_domain.git
