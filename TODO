@@ -48,6 +48,18 @@ littoral.ru
   ...
   - on server and on skud + security
 
-ifmo.ru
-  - owl use SNMP too
 
+SMART monitoring of Windows host:
+
+
++ # Blat - is console mailing client
++ choco install --yes smartmontools;blat
++ # Go to Start menu - All programs - smartmontools - smartd examples - service install, eventlog, 30 min
+- # Configure C:\Program Files\smartmontools\smartd.conf
++ # Configure Blat email
++ blat -install mail.itgenius.ru admin@example.ru 
++ # Test Blat emailing to admin address
++ # Or reboot
++ net start smartd
+
+mail hostname is set to TS instead of ts.example.ru
