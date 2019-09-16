@@ -1,5 +1,7 @@
 NAGIOS
 
+Routing table monitoring via rtmon file /var/log/rtmon.log (history can be viewed with ip monitor file /var/log/rtmon.log)
+
 
 Add right nagios.cfg file
 Add submit_check_result_via_nsca to /etc/nagios3
